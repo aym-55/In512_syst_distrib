@@ -94,22 +94,7 @@ class Agent:
         fig.canvas.draw()
         
         plt.show() 
-    
-    def start_map_thread(self):
-        """ Start map thread """
-        if not self.map_running:
-            self.map_running = True
-            self.thread = Thread(target=self.show_map, daemon=True)
-            self.thread.start()
-
-
-    def stop_map_thread(self):
-        """ Stop map thread """
-        self.map_running = False
-        plt.close()
-        if self.thread.is_alive():
-            self.thread.join()
-    
+     
 
     def move(self, direction):
         control_command = {"header":MOVE}           # Set the header frame
