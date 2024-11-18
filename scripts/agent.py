@@ -30,7 +30,7 @@ class Agent:
         self.x, self.y = env_conf["x"], env_conf["y"]   #initial agent position
         self.w, self.h = env_conf["w"], env_conf["h"]   #environment dimensions
         cell_val = env_conf["cell_val"] #value of the cell the agent is located in
-        self.map = np.full((self.w, self.h), np.nan)
+        self.map = np.full((self.h, self.w), np.nan)
         print(cell_val)
         Thread(target=self.msg_cb, daemon=True).start()
         print("hello")
@@ -66,15 +66,20 @@ class Agent:
 
     #TODO: CREATE YOUR METHODS HERE...
     def update_map(self):
+        """ Update self.map with cell value """
         try :
-            self.network.send({"header":GET_DATA})
-            self.msg_cb
-            self.map[self.y, self.x] = self.msg["cell_val"]
+            self.network.send({"header":GET_DATA})          # Asking for the data
+            self.msg_cb                                     # Receiving the data
+            self.map[self.y, self.x] = self.msg["cell_val"] # Extract the cell value
+            return 0
+
         except Exception as e:
-            print(f'Map not updated : {e}')
-        return 0
+            # Sometime value is 31 for axis 1
+            print(f'Map not updated : {e}') 
+            return 1
 
     def show_map(self):
+        """ Use pyplot to get the temperature of the map """
         print(self.map)
         plt.imshow(self.map, cmap='Reds', interpolation='none')
         plt.colorbar(label='Value')
@@ -86,110 +91,114 @@ class Agent:
 
         return 0
     
+
+    def move(self, direction):
+        control_command = {"header":MOVE}           # Set the header frame
+        control_command["direction"] = direction    # Set the direction frame
+        self.network.send(control_command)          # Send the command
+        self.update_map()                           # Update the agent's map
+        sleep(0.1)
+        return 0
+
+
     def controller(self):
-        print("Opening controls...")
-        control_command = {"header":MOVE}
+
         while True:
-            print("in the loop")
-            data = input("")
-            
+            data = str(input("")).lower()
+
             if data == "x":
+                ''' EXIT '''
                 print("EXITING Controller...")
                 return
-            elif data == "z":
-                print("Going UP")
-                control_command["direction"] = UP
-            elif data == "q":
-                print("Going LEFT")
-                control_command["direction"] = LEFT
-            elif data == "s":
-                print("Going DOWN")
-                control_command["direction"] = DOWN
-            elif data == "d":
-                print("Going RIGHT")
-                control_command["direction"] = RIGHT
             
-            agent.network.send(control_command)
-            self.update_map()
+            elif data == "z":
+                ''' UP '''
+                self.move(UP)
+
+            elif data == "q":
+                ''' LEFT '''
+                self.move(LEFT)
+
+            elif data == "s":
+                ''' DOWN '''
+                self.move(DOWN)
+
+            elif data == "d":
+                ''' RIGHT '''
+                self.move(RIGHT)
+
+
 
     def strat1(self):
-        control_command = {"header":MOVE}
-
-        detection_range = 3
-        h_direction = self.h - detection_range
+        ''' Strategy 1 aim to move up and down with a lateral movement of detection range size '''
+        detection_range = 2
+        h_direction = self.h - detection_range - 1  # Go DOWN
+        print(f'HERE IS THE DIRECTION {h_direction}')
 
         while self.x != self.w-1:
 
             while self.y != h_direction:
-                if h_direction == self.h - detection_range:
-                    control_command["direction"] = DOWN
+                ''' While the limit is not reach carry on the given y direcion '''
+                if h_direction == self.h - detection_range - 1:
+                    self.move(DOWN)
+
                 elif h_direction == detection_range:
-                    control_command["direction"] = UP
-                agent.network.send(control_command)
-                sleep(0.1)
-                self.update_map()
+                    self.move(UP)
+        
+            ''' 5 steps on the right cells '''
+            for i in range(2*detection_range + 1):
+                self.move(RIGHT)
             
-            for i in range(5):
-                control_command["direction"] = RIGHT
-                agent.network.send(control_command)
-                sleep(0.1)
-                self.update_map()
-            
-            if self.y == self.h-detection_range:
+            ''' Handle the direction of y '''
+            if self.y == self.h-detection_range-1: # Go UP
                 h_direction = detection_range
-            elif self.y == detection_range:
-                h_direction = self.h - detection_range
-            
+
+            elif self.y == detection_range:      # Go DOWN
+                h_direction = self.h - detection_range - 1
+
 
     def go_to_point(self, coord):
+        ''' Lead the agent to the given tuple coordonates '''
         x_goal = coord[0]-1
-        y_goal = coord[1]
+        y_goal = coord[1]-1
 
         if (x_goal < 0 and x_goal > self.h) and (y_goal < 0 and y_goal > self.w):
+            ''' Checking the map outbounds '''
             print(f'Point ({x_goal}, {y_goal}) is out of bound !\nExiting...')
             return 1
 
         else : 
             print(f'Going to point ({x_goal}, {y_goal})')
 
-            if x_goal < self.x :
+            ''' Checking for the direction on x '''
+            if x_goal <= self.x :
                 x_direction = LEFT
             else:
                 x_direction = RIGHT
 
-            if y_goal < self.y :
+            ''' Checking for the direction on y '''
+            if y_goal <= self.y :
                 y_direction = UP
             else:
                 y_direction = DOWN
 
-            control_command = {"header":MOVE}
-
             while True:
-                if x_goal == self.x :
-                    x_direction = STAND
+                ''' Increment step to the given direction (not using diagonal yet) '''
+                if x_goal == self.x :      # X goal is reached
+                    x_direction = STAND 
                 else:
-                    control_command['direction'] = x_direction
-                    agent.network.send(control_command)
-                    sleep(0.1)
-                    self.update_map()
+                    self.move(x_direction) # Carry on X
 
-                if y_goal == self.y :
+                if y_goal == self.y :      # Y goal is reached
                     y_direction = STAND
                 else:
-                    control_command['direction'] = y_direction
-                    agent.network.send(control_command)
-                    sleep(0.1)
-                    self.update_map()
+                    self.move(y_direction) # Carry on Y
 
+                ''' Point has been reached by the agent '''
                 if y_direction == x_direction:
                     return 0
                 
 
-
-        
-
-
-            
  
 if __name__ == "__main__":
     from random import randint
@@ -204,17 +213,29 @@ if __name__ == "__main__":
         while True:
             cmds = {"header": int(input("0 <-> Broadcast msg\n1 <-> Get data\n2 <-> Move\n3 <-> Get nb connected agents\n4 <-> Get nb agents\n5 <-> Get item owner\n6 <-> Developper\n"))}
             
+            """
+            +------------------------------------------+
+            | This section is the Developper tool part |
+            +------------------------------------------+
+            """
             if cmds["header"] == 6:
                 dev_input = int(input("\t0 <-> Controller\n\t1 <-> Strategy 1\n\t2 <-> Go to point\n\t3 <-> Show map\n"))
                 if dev_input == 0:
+                    ''' Call the manual controller '''
                     agent.controller()
+
                 elif dev_input == 1:
+                    ''' Call the Strategy 1 '''
                     agent.strat1()
+
                 elif dev_input == 2:
+                    ''' Set a point to reach '''
                     dev_x_coord = int(input("X : "))
                     dev_y_coord = int(input("Y : "))
                     agent.go_to_point((dev_x_coord, dev_y_coord))
+
                 elif dev_input == 3:
+                    ''' Show pyplot heat map '''
                     agent.show_map()
 
                 continue
