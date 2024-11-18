@@ -63,6 +63,62 @@ class Agent:
                   
 
     #TODO: CREATE YOUR METHODS HERE...
+    def controller(self):
+        print("Opening controls...")
+        control_command = {"header":MOVE}
+        while True:
+            print("in the loop")
+            data = input("")
+            
+            if data == "x":
+                print("EXITING Controller...")
+                return
+            elif data == "z":
+                print("Going UP")
+                control_command["direction"] = UP
+            elif data == "q":
+                print("Going LEFT")
+                control_command["direction"] = LEFT
+            elif data == "s":
+                print("Going DOWN")
+                control_command["direction"] = DOWN
+            elif data == "d":
+                print("Going RIGHT")
+                control_command["direction"] = RIGHT
+            
+            agent.network.send(control_command)
+
+    def strat1(self):
+        control_command = {"header":MOVE}
+
+        detection_range = 3
+        h_direction = self.h - detection_range
+
+        print(f'start = {self.y} / end = {h_direction}')
+        while self.x != self.w-1:
+
+            while self.y != h_direction:
+                if h_direction == self.h - detection_range:
+                    control_command["direction"] = DOWN
+                elif h_direction == detection_range:
+                    control_command["direction"] = UP
+                agent.network.send(control_command)
+                sleep(0.1)
+            
+            for i in range(5):
+                control_command["direction"] = RIGHT
+                agent.network.send(control_command)
+                sleep(0.1)
+            
+            if self.y == self.h-detection_range:
+                h_direction = detection_range
+            elif self.y == detection_range:
+                h_direction = self.h - detection_range
+            
+
+
+        
+
 
             
  
