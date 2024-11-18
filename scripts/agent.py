@@ -81,12 +81,12 @@ class Agent:
     def show_map(self):
         """ Use pyplot to get the temperature of the map """
         print(self.map)
-        plt.imshow(self.map, cmap='Reds', interpolation='none')
+        plt.imshow(self.map, cmap='Reds', vmin = 0, vmax = 1, interpolation='none')
         plt.colorbar(label='Value')
 
-        plt.title('Matrix with NaN Values')
-        plt.xlabel('Columns')
-        plt.ylabel('Rows')
+        plt.title('Agent Heatmap')
+        plt.xlabel('Y')
+        plt.ylabel('X')
         plt.show()
 
         return 0
