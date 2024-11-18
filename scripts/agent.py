@@ -31,7 +31,6 @@ class Agent:
         self.w, self.h = env_conf["w"], env_conf["h"]   #environment dimensions
         cell_val = env_conf["cell_val"] #value of the cell the agent is located in
         self.map = np.full((self.h, self.w), np.nan)
-        self.map_running = False
         print(cell_val)
         Thread(target=self.msg_cb, daemon=True).start()
         print("hello")
@@ -50,6 +49,8 @@ class Agent:
                 self.nb_agent_expected = msg["nb_agents"]
             elif msg["header"] == GET_NB_CONNECTED_AGENTS:
                 self.nb_agent_connected = msg["nb_connected_agents"]
+
+            self.update_map()
 
             print("hellooo: ", msg)
             print("agent_id ", self.agent_id)
@@ -89,13 +90,9 @@ class Agent:
         plt.xlabel('Y')
         plt.ylabel('X')
 
-        while self.map_running: 
-            cax.set_data(self.map)  # Update map
-            fig.canvas.draw()
-            fig.canvas.flush_events()
-            sleep(0.01)
-
-        plt.ioff()
+        cax.set_data(self.map)  # Update map
+        fig.canvas.draw()
+        
         plt.show() 
     
     def start_map_thread(self):
@@ -118,7 +115,6 @@ class Agent:
         control_command = {"header":MOVE}           # Set the header frame
         control_command["direction"] = direction    # Set the direction frame
         self.network.send(control_command)          # Send the command
-        self.update_map()                           # Update the agent's map
         sleep(0.1)
         return 0
 
@@ -155,8 +151,6 @@ class Agent:
         ''' Strategy 1 aim to move up and down with a lateral movement of detection range size '''
         detection_range = 2
         h_direction = self.h - detection_range - 1  # Go DOWN
-        print(f'HERE IS THE DIRECTION {h_direction}')
-
         while self.x != self.w-1:
 
             while self.y != h_direction:
@@ -241,7 +235,7 @@ if __name__ == "__main__":
             +------------------------------------------+
             """
             if cmds["header"] == 6:
-                dev_input = int(input(f"\t0 <-> Controller\n\t1 <-> Strategy 1\n\t2 <-> Go to point\n\t3 <-> Show map [{agent.map_running}]\n"))
+                dev_input = int(input(f"\t0 <-> Controller\n\t1 <-> Strategy 1\n\t2 <-> Go to point\n\t3 <-> Show map\n"))
                 if dev_input == 0:
                     ''' Call the manual controller '''
                     agent.controller()
@@ -258,10 +252,7 @@ if __name__ == "__main__":
 
                 elif dev_input == 3:
                     ''' Show pyplot heat map '''
-                    if agent.map_running == False:
-                        agent.start_map_thread()
-                    elif agent.map_running == True:
-                        agent.stop_map_thread()
+                    agent.show_map()
 
                 continue
 
