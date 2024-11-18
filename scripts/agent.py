@@ -133,7 +133,16 @@ if __name__ == "__main__":
     
     try:    #Manual control test0
         while True:
-            cmds = {"header": int(input("0 <-> Broadcast msg\n1 <-> Get data\n2 <-> Move\n3 <-> Get nb connected agents\n4 <-> Get nb agents\n5 <-> Get item owner\n"))}
+            cmds = {"header": int(input("0 <-> Broadcast msg\n1 <-> Get data\n2 <-> Move\n3 <-> Get nb connected agents\n4 <-> Get nb agents\n5 <-> Get item owner\n6 <-> Developper\n"))}
+            
+            if cmds["header"] == 6:
+                dev_input = int(input("0 <-> Controller\n1 <-> Strategy 1\n"))
+                if dev_input == 0:
+                    agent.controller()
+                elif dev_input == 1:
+                    agent.strat1()
+                continue
+
             if cmds["header"] == BROADCAST_MSG:
                 cmds["Msg type"] = int(input("1 <-> Key discovered\n2 <-> Box discovered\n3 <-> Completed\n"))
                 cmds["position"] = (agent.x, agent.y)
