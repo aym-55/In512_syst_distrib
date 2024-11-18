@@ -31,6 +31,7 @@ class Agent:
         self.w, self.h = env_conf["w"], env_conf["h"]   #environment dimensions
         cell_val = env_conf["cell_val"] #value of the cell the agent is located in
         self.map = np.full((self.h, self.w), np.nan)
+        self.map_running = False
         print(cell_val)
         Thread(target=self.msg_cb, daemon=True).start()
         print("hello")
@@ -68,8 +69,6 @@ class Agent:
     def update_map(self):
         """ Update self.map with cell value """
         try :
-            self.network.send({"header":GET_DATA})          # Asking for the data
-            self.msg_cb                                     # Receiving the data
             self.map[self.y, self.x] = self.msg["cell_val"] # Extract the cell value
             return 0
 
@@ -77,19 +76,42 @@ class Agent:
             # Sometime value is 31 for axis 1
             print(f'Map not updated : {e}') 
             return 1
+        
 
     def show_map(self):
-        """ Use pyplot to get the temperature of the map """
-        print(self.map)
-        plt.imshow(self.map, cmap='Reds', vmin = 0, vmax = 1, interpolation='none')
-        plt.colorbar(label='Value')
+        """Affiche la carte en utilisant pyplot, mise à jour en temps réel."""
+        plt.ion()
+        fig, ax = plt.subplots()
+        cax = ax.imshow(self.map, cmap='Reds', vmin=0, vmax=1, interpolation='none')
+        fig.colorbar(cax, label='Value')
 
         plt.title('Agent Heatmap')
         plt.xlabel('Y')
         plt.ylabel('X')
-        plt.show()
 
-        return 0
+        while self.map_running: 
+            cax.set_data(self.map)  # Update map
+            fig.canvas.draw()
+            fig.canvas.flush_events()
+            sleep(0.01)
+
+        plt.ioff()
+        plt.show() 
+    
+    def start_map_thread(self):
+        """ Start map thread """
+        if not self.map_running:
+            self.map_running = True
+            self.thread = Thread(target=self.show_map, daemon=True)
+            self.thread.start()
+
+
+    def stop_map_thread(self):
+        """ Stop map thread """
+        self.map_running = False
+        plt.close()
+        if self.thread.is_alive():
+            self.thread.join()
     
 
     def move(self, direction):
@@ -219,7 +241,7 @@ if __name__ == "__main__":
             +------------------------------------------+
             """
             if cmds["header"] == 6:
-                dev_input = int(input("\t0 <-> Controller\n\t1 <-> Strategy 1\n\t2 <-> Go to point\n\t3 <-> Show map\n"))
+                dev_input = int(input(f"\t0 <-> Controller\n\t1 <-> Strategy 1\n\t2 <-> Go to point\n\t3 <-> Show map [{agent.map_running}]\n"))
                 if dev_input == 0:
                     ''' Call the manual controller '''
                     agent.controller()
@@ -236,7 +258,10 @@ if __name__ == "__main__":
 
                 elif dev_input == 3:
                     ''' Show pyplot heat map '''
-                    agent.show_map()
+                    if agent.map_running == False:
+                        agent.start_map_thread()
+                    elif agent.map_running == True:
+                        agent.stop_map_thread()
 
                 continue
 
