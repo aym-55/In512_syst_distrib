@@ -11,6 +11,7 @@ from threading import Thread
 import numpy as np
 from time import sleep
 
+import matplotlib.pyplot as plt
 
 class Agent:
     """ Class that implements the behaviour of each agent based on their perception and communication with other agents """
@@ -29,6 +30,7 @@ class Agent:
         self.x, self.y = env_conf["x"], env_conf["y"]   #initial agent position
         self.w, self.h = env_conf["w"], env_conf["h"]   #environment dimensions
         cell_val = env_conf["cell_val"] #value of the cell the agent is located in
+        self.map = np.full((self.w, self.h), np.nan)
         print(cell_val)
         Thread(target=self.msg_cb, daemon=True).start()
         print("hello")
@@ -63,6 +65,27 @@ class Agent:
                   
 
     #TODO: CREATE YOUR METHODS HERE...
+    def update_map(self):
+        try :
+            self.network.send({"header":GET_DATA})
+            self.msg_cb
+            self.map[self.y, self.x] = self.msg["cell_val"]
+        except Exception as e:
+            print(f'Map not updated : {e}')
+        return 0
+
+    def show_map(self):
+        print(self.map)
+        plt.imshow(self.map, cmap='Reds', interpolation='none')
+        plt.colorbar(label='Value')
+
+        plt.title('Matrix with NaN Values')
+        plt.xlabel('Columns')
+        plt.ylabel('Rows')
+        plt.show()
+
+        return 0
+    
     def controller(self):
         print("Opening controls...")
         control_command = {"header":MOVE}
@@ -87,6 +110,7 @@ class Agent:
                 control_command["direction"] = RIGHT
             
             agent.network.send(control_command)
+            self.update_map()
 
     def strat1(self):
         control_command = {"header":MOVE}
@@ -94,7 +118,6 @@ class Agent:
         detection_range = 3
         h_direction = self.h - detection_range
 
-        print(f'start = {self.y} / end = {h_direction}')
         while self.x != self.w-1:
 
             while self.y != h_direction:
@@ -104,17 +127,63 @@ class Agent:
                     control_command["direction"] = UP
                 agent.network.send(control_command)
                 sleep(0.1)
+                self.update_map()
             
             for i in range(5):
                 control_command["direction"] = RIGHT
                 agent.network.send(control_command)
                 sleep(0.1)
+                self.update_map()
             
             if self.y == self.h-detection_range:
                 h_direction = detection_range
             elif self.y == detection_range:
                 h_direction = self.h - detection_range
             
+
+    def go_to_point(self, coord):
+        x_goal = coord[0]-1
+        y_goal = coord[1]
+
+        if (x_goal < 0 and x_goal > self.h) and (y_goal < 0 and y_goal > self.w):
+            print(f'Point ({x_goal}, {y_goal}) is out of bound !\nExiting...')
+            return 1
+
+        else : 
+            print(f'Going to point ({x_goal}, {y_goal})')
+
+            if x_goal < self.x :
+                x_direction = LEFT
+            else:
+                x_direction = RIGHT
+
+            if y_goal < self.y :
+                y_direction = UP
+            else:
+                y_direction = DOWN
+
+            control_command = {"header":MOVE}
+
+            while True:
+                if x_goal == self.x :
+                    x_direction = STAND
+                else:
+                    control_command['direction'] = x_direction
+                    agent.network.send(control_command)
+                    sleep(0.1)
+                    self.update_map()
+
+                if y_goal == self.y :
+                    y_direction = STAND
+                else:
+                    control_command['direction'] = y_direction
+                    agent.network.send(control_command)
+                    sleep(0.1)
+                    self.update_map()
+
+                if y_direction == x_direction:
+                    return 0
+                
 
 
         
@@ -136,19 +205,26 @@ if __name__ == "__main__":
             cmds = {"header": int(input("0 <-> Broadcast msg\n1 <-> Get data\n2 <-> Move\n3 <-> Get nb connected agents\n4 <-> Get nb agents\n5 <-> Get item owner\n6 <-> Developper\n"))}
             
             if cmds["header"] == 6:
-                dev_input = int(input("0 <-> Controller\n1 <-> Strategy 1\n"))
+                dev_input = int(input("\t0 <-> Controller\n\t1 <-> Strategy 1\n\t2 <-> Go to point\n\t3 <-> Show map\n"))
                 if dev_input == 0:
                     agent.controller()
                 elif dev_input == 1:
                     agent.strat1()
+                elif dev_input == 2:
+                    dev_x_coord = int(input("X : "))
+                    dev_y_coord = int(input("Y : "))
+                    agent.go_to_point((dev_x_coord, dev_y_coord))
+                elif dev_input == 3:
+                    agent.show_map()
+
                 continue
 
             if cmds["header"] == BROADCAST_MSG:
-                cmds["Msg type"] = int(input("1 <-> Key discovered\n2 <-> Box discovered\n3 <-> Completed\n"))
+                cmds["Msg type"] = int(input("\t1 <-> Key discovered\n\t2 <-> Box discovered\n\t3 <-> Completed\n"))
                 cmds["position"] = (agent.x, agent.y)
                 cmds["owner"] = randint(0,3) # TODO: specify the owner of the item
             elif cmds["header"] == MOVE:
-                cmds["direction"] = int(input("0 <-> Stand\n1 <-> Left\n2 <-> Right\n3 <-> Up\n4 <-> Down\n5 <-> UL\n6 <-> UR\n7 <-> DL\n8 <-> DR\n"))
+                cmds["direction"] = int(input("\t0 <-> Stand\n\t1 <-> Left\n\t2 <-> Right\n\t3 <-> Up\n\t4 <-> Down\n\t5 <-> UL\n\t6 <-> UR\n\t7 <-> DL\n\t8 <-> DR\n"))
             agent.network.send(cmds)
     except KeyboardInterrupt:
         pass
