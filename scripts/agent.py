@@ -4,8 +4,13 @@ __credits__ = ["Aybuke Ozturk Suri", "Johvany Gustave"]
 __license__ = "Apache License 2.0"
 __version__ = "1.0.0"
 
-from network import Network
-from my_constants import *
+if __name__ == "__main__":
+    from network import Network
+    from my_constants import *
+
+else:
+    from .network import Network
+    from .my_constants import *
 
 from threading import Thread
 import numpy as np
@@ -130,34 +135,6 @@ class Agent:
                 ''' RIGHT '''
                 self.move(RIGHT)
 
-
-
-    def strat1(self):
-        ''' Strategy 1 aim to move up and down with a lateral movement of detection range size '''
-        detection_range = 2
-        h_direction = self.h - detection_range - 1  # Go DOWN
-        while self.x != self.w-1:
-
-            while self.y != h_direction:
-                ''' While the limit is not reach carry on the given y direcion '''
-                if h_direction == self.h - detection_range - 1:
-                    self.move(DOWN)
-
-                elif h_direction == detection_range:
-                    self.move(UP)
-        
-            ''' 5 steps on the right cells '''
-            for i in range(2*detection_range + 1):
-                self.move(RIGHT)
-            
-            ''' Handle the direction of y '''
-            if self.y == self.h-detection_range-1: # Go UP
-                h_direction = detection_range
-
-            elif self.y == detection_range:      # Go DOWN
-                h_direction = self.h - detection_range - 1
-
-
     def go_to_point(self, coord):
         ''' Lead the agent to the given tuple coordonates '''
         x_goal = coord[0]-1
@@ -212,35 +189,7 @@ if __name__ == "__main__":
     
     try:    #Manual control test0
         while True:
-            cmds = {"header": int(input("0 <-> Broadcast msg\n1 <-> Get data\n2 <-> Move\n3 <-> Get nb connected agents\n4 <-> Get nb agents\n5 <-> Get item owner\n6 <-> Developper\n"))}
-            
-            """
-            +------------------------------------------+
-            | This section is the Developper tool part |
-            +------------------------------------------+
-            """
-            if cmds["header"] == 6:
-                dev_input = int(input(f"\t0 <-> Controller\n\t1 <-> Strategy 1\n\t2 <-> Go to point\n\t3 <-> Show map\n"))
-                if dev_input == 0:
-                    ''' Call the manual controller '''
-                    agent.controller()
-
-                elif dev_input == 1:
-                    ''' Call the Strategy 1 '''
-                    agent.strat1()
-
-                elif dev_input == 2:
-                    ''' Set a point to reach '''
-                    dev_x_coord = int(input("X : "))
-                    dev_y_coord = int(input("Y : "))
-                    agent.go_to_point((dev_x_coord, dev_y_coord))
-
-                elif dev_input == 3:
-                    ''' Show pyplot heat map '''
-                    agent.show_map()
-
-                continue
-
+            cmds = {"header": int(input("0 <-> Broadcast msg\n1 <-> Get data\n2 <-> Move\n3 <-> Get nb connected agents\n4 <-> Get nb agents\n5 <-> Get item owner\n"))}
             if cmds["header"] == BROADCAST_MSG:
                 cmds["Msg type"] = int(input("\t1 <-> Key discovered\n\t2 <-> Box discovered\n\t3 <-> Completed\n"))
                 cmds["position"] = (agent.x, agent.y)

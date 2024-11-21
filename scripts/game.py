@@ -8,8 +8,13 @@ __version__ = "1.0.0"
 import json, os
 import numpy as np
 
-from my_constants import *
-from gui import GUI
+if __name__ == '__main__' or __name__ == 'game':
+    from my_constants import *
+    from gui import GUI
+else:
+    from .my_constants import *
+    from .gui import GUI
+
 from time import sleep
 
 
