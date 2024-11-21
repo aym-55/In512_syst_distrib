@@ -39,10 +39,13 @@ try:
 
         if cmds["header"] == BROADCAST_MSG:
             cmds["Msg type"] = int(input("\t1 <-> Key discovered\n\t2 <-> Box discovered\n\t3 <-> Completed\n"))
-            cmds["position"] = (agent.x, agent.y)
+            cmds["position"] = agent.get_position()
             cmds["owner"] = randint(0,3) # TODO: specify the owner of the item
+
         elif cmds["header"] == MOVE:
             cmds["direction"] = int(input("\t0 <-> Stand\n\t1 <-> Left\n\t2 <-> Right\n\t3 <-> Up\n\t4 <-> Down\n\t5 <-> UL\n\t6 <-> UR\n\t7 <-> DL\n\t8 <-> DR\n"))
+
         agent.network.send(cmds)
+
 except KeyboardInterrupt:
     pass

@@ -99,7 +99,19 @@ class Agent:
         fig.canvas.draw()
         
         plt.show() 
-     
+
+
+    def get_position(self):
+        return (self.x, self.y)
+    
+    def get_map(self):
+        return self.map
+    
+    def get_cell(self):
+        return self.msg['cell_val']
+    
+    def get_map_boundaries(self):
+        return (self.w, self.h)
 
     def move(self, direction):
         control_command = {"header":MOVE}           # Set the header frame
