@@ -11,15 +11,18 @@ class strategy:
     def strat1(self):
         ''' Strategy 1 aim to move up and down with a lateral movement of detection range size '''
         detection_range = 2
-        h_direction = self.agent.h - detection_range - 1  # Go DOWN
+        up_edge         = detection_range
+        down_edge       = self.agent.h - detection_range - 1
+
+        h_direction     = down_edge  # Go DOWN
         while self.agent.x != self.agent.w-1:
 
             while self.agent.y != h_direction:
                 ''' While the limit is not reach carry on the given y direcion '''
-                if h_direction == self.agent.h - detection_range - 1:
+                if h_direction == down_edge:
                     self.agent.move(DOWN)
 
-                elif h_direction == detection_range:
+                elif h_direction == up_edge:
                     self.agent.move(UP)
         
             ''' 5 steps on the right cells '''
@@ -27,10 +30,10 @@ class strategy:
                 self.agent.move(RIGHT)
             
             ''' Handle the direction of y '''
-            if self.agent.y == self.agent.h-detection_range-1: # Go UP
+            if self.agent.y == down_edge: # Go UP
                 h_direction = detection_range
 
-            elif self.agent.y == detection_range:      # Go DOWN
+            elif self.agent.y == up_edge: # Go DOWN
                 h_direction = self.agent.h - detection_range - 1
 
 
