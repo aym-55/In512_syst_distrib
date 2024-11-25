@@ -16,23 +16,35 @@ class strategy:
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
                 # Arrivée à la clé
+                self.agent.move(DOWN)
+                self.agent.move(DOWN)
+                self.agent.move(DOWN)
             elif self.agent.msg["cell_val"] == 0.5:
                 self.agent.move(RIGHT)
-                # Arrivée à la clé 
+                # Arrivée à la clé
+                self.agent.move(DOWN_RIGHT)
+                self.agent.move(DOWN)
+                self.agent.move(DOWN) 
             else:
-                # Arrivée à la clé  
-                pass                                              
+                # Arrivée à la clé
+                self.agent.move(DOWN_RIGHT)
+                self.agent.move(DOWN_RIGHT)
+                self.agent.move(DOWN)                                                
         else:
             self.agent.move(UP_RIGHT)
             self.agent.move(DOWN_RIGHT)
             self.agent.move(DOWN_RIGHT)
             if self.agent.msg["cell_val"] == 1:
                 # Arrivée à la clé
-                pass
+                self.agent.move(DOWN_LEFT)
+                self.agent.move(DOWN_LEFT)
+                self.agent.move(DOWN)
             else:
                 self.agent.move(LEFT)
                 # Arrivée à la clé
-                pass
+                self.agent.move(DOWN_LEFT)
+                self.agent.move(DOWN)
+                self.agent.move(DOWN)
 
     def search_key_up(self):
         self.agent.move(UP_LEFT)
@@ -55,7 +67,7 @@ class strategy:
                 # Arrivée à la clé
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP_RIGHT)
-                self.agent.move(UP)                                             
+                self.agent.move(UP)                                           
         else:
             self.agent.move(DOWN_RIGHT)
             self.agent.move(UP_RIGHT)
@@ -65,14 +77,240 @@ class strategy:
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP)
-                pass
             else:
                 self.agent.move(LEFT)
                 # Arrivée à la clé
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP)
                 self.agent.move(UP)
-                pass
+
+    def search_key_right(self):
+        self.agent.move(UP_RIGHT)
+        if self.agent.msg["cell_val"] == 0.5:
+            self.agent.move(UP_RIGHT)
+            if self.agent.msg["cell_val"] == 0.25:
+                self.agent.move(DOWN)
+                self.agent.move(DOWN)
+                # Arrivée à la clé
+                self.agent.move(RIGHT)
+                self.agent.move(RIGHT)
+                self.agent.move(RIGHT)
+            elif self.agent.msg["cell_val"] == 0.5:
+                self.agent.move(DOWN)
+                # Arrivée à la clé 
+                self.agent.move(DOWN_RIGHT)
+                self.agent.move(RIGHT)
+                self.agent.move(RIGHT)
+            else:
+                # Arrivée à la clé
+                self.agent.move(DOWN_RIGHT)
+                self.agent.move(DOWN_RIGHT)
+                self.agent.move(RIGHT)                                             
+        else:
+            self.agent.move(DOWN_LEFT)
+            self.agent.move(DOWN_RIGHT)
+            self.agent.move(DOWN_RIGHT)
+            if self.agent.msg["cell_val"] == 1:
+                # Arrivée à la clé
+                self.agent.move(UP_RIGHT)
+                self.agent.move(UP_RIGHT)
+                self.agent.move(RIGHT)
+            else:
+                self.agent.move(UP)
+                # Arrivée à la clé
+                self.agent.move(UP_RIGHT)
+                self.agent.move(RIGHT)
+                self.agent.move(RIGHT)
+                
+    def search_key_left(self):
+        self.agent.move(UP_RIGHT)
+        if self.agent.msg["cell_val"] == 0.5:
+            self.agent.move(UP_LEFT)
+            if self.agent.msg["cell_val"] == 0.25:
+                self.agent.move(DOWN)
+                self.agent.move(DOWN)
+                # Arrivée à la clé
+                self.agent.move(LEFT)
+                self.agent.move(LEFT)
+                self.agent.move(LEFT)
+            elif self.agent.msg["cell_val"] == 0.5:
+                self.agent.move(DOWN)
+                # Arrivée à la clé 
+                self.agent.move(DOWN_LEFT)
+                self.agent.move(LEFT)
+                self.agent.move(LEFT)
+            else:
+                # Arrivée à la clé
+                self.agent.move(DOWN_LEFT)
+                self.agent.move(DOWN_LEFT)
+                self.agent.move(LEFT)                                             
+        else:
+            self.agent.move(DOWN_RIGHT)
+            self.agent.move(DOWN_LEFT)
+            self.agent.move(DOWN_LEFT)
+            if self.agent.msg["cell_val"] == 1:
+                # Arrivée à la clé
+                self.agent.move(UP_LEFT)
+                self.agent.move(UP_LEFT)
+                self.agent.move(LEFT)
+            else:
+                self.agent.move(UP)
+                # Arrivée à la clé
+                self.agent.move(UP_LEFT)
+                self.agent.move(LEFT)
+                self.agent.move(LEFT)
+
+    def search_chest_down(self):
+        self.agent.move(DOWN_LEFT)
+        if self.agent.msg["cell_val"] == 0.6:
+            self.agent.move(DOWN_LEFT)
+            if self.agent.msg["cell_val"] == 0.3:
+                self.agent.move(RIGHT)
+                self.agent.move(RIGHT)
+                # Arrivée au coffre
+                self.agent.move(DOWN)
+                self.agent.move(DOWN)
+                self.agent.move(DOWN)
+            elif self.agent.msg["cell_val"] == 0.6:
+                self.agent.move(RIGHT)
+                # Arrivée au coffre
+                self.agent.move(DOWN_RIGHT)
+                self.agent.move(DOWN)
+                self.agent.move(DOWN) 
+            else:
+                # Arrivée au coffre
+                self.agent.move(DOWN_RIGHT)
+                self.agent.move(DOWN_RIGHT)
+                self.agent.move(DOWN)                                                
+        else:
+            self.agent.move(UP_RIGHT)
+            self.agent.move(DOWN_RIGHT)
+            self.agent.move(DOWN_RIGHT)
+            if self.agent.msg["cell_val"] == 1:
+                # Arrivée au coffre
+                self.agent.move(DOWN_LEFT)
+                self.agent.move(DOWN_LEFT)
+                self.agent.move(DOWN)
+            else:
+                self.agent.move(LEFT)
+                # Arrivée au coffre
+                self.agent.move(DOWN_LEFT)
+                self.agent.move(DOWN)
+                self.agent.move(DOWN)
+
+    def search_chest_up(self):
+        self.agent.move(UP_LEFT)
+        if self.agent.msg["cell_val"] == 0.6:
+            self.agent.move(UP_LEFT)
+            if self.agent.msg["cell_val"] == 0.3:
+                self.agent.move(RIGHT)
+                self.agent.move(RIGHT)
+                # Arrivée au coffre
+                self.agent.move(UP)
+                self.agent.move(UP)
+                self.agent.move(UP)
+            elif self.agent.msg["cell_val"] == 0.6:
+                self.agent.move(RIGHT)
+                # Arrivée au coffre 
+                self.agent.move(UP_RIGHT)
+                self.agent.move(UP)
+                self.agent.move(UP)
+            else:
+                # Arrivée au coffre
+                self.agent.move(UP_RIGHT)
+                self.agent.move(UP_RIGHT)
+                self.agent.move(UP)                                           
+        else:
+            self.agent.move(DOWN_RIGHT)
+            self.agent.move(UP_RIGHT)
+            self.agent.move(UP_RIGHT)
+            if self.agent.msg["cell_val"] == 1:
+                # Arrivée au coffre
+                self.agent.move(UP_LEFT)
+                self.agent.move(UP_LEFT)
+                self.agent.move(UP)
+            else:
+                self.agent.move(LEFT)
+                # Arrivée au coffre
+                self.agent.move(UP_LEFT)
+                self.agent.move(UP)
+                self.agent.move(UP)
+
+    def search_chest_right(self):
+        self.agent.move(UP_RIGHT)
+        if self.agent.msg["cell_val"] == 0.6:
+            self.agent.move(UP_RIGHT)
+            if self.agent.msg["cell_val"] == 0.3:
+                self.agent.move(DOWN)
+                self.agent.move(DOWN)
+                # Arrivée au coffre
+                self.agent.move(RIGHT)
+                self.agent.move(RIGHT)
+                self.agent.move(RIGHT)
+            elif self.agent.msg["cell_val"] == 0.6:
+                self.agent.move(DOWN)
+                # Arrivée au coffre 
+                self.agent.move(DOWN_RIGHT)
+                self.agent.move(RIGHT)
+                self.agent.move(RIGHT)
+            else:
+                # Arrivée au coffre
+                self.agent.move(DOWN_RIGHT)
+                self.agent.move(DOWN_RIGHT)
+                self.agent.move(RIGHT)                                             
+        else:
+            self.agent.move(DOWN_LEFT)
+            self.agent.move(DOWN_RIGHT)
+            self.agent.move(DOWN_RIGHT)
+            if self.agent.msg["cell_val"] == 1:
+                # Arrivée au coffre
+                self.agent.move(UP_RIGHT)
+                self.agent.move(UP_RIGHT)
+                self.agent.move(RIGHT)
+            else:
+                self.agent.move(UP)
+                # Arrivée au coffre
+                self.agent.move(UP_RIGHT)
+                self.agent.move(RIGHT)
+                self.agent.move(RIGHT)
+                
+    def search_chest_left(self):
+        self.agent.move(UP_RIGHT)
+        if self.agent.msg["cell_val"] == 0.6:
+            self.agent.move(UP_LEFT)
+            if self.agent.msg["cell_val"] == 0.3:
+                self.agent.move(DOWN)
+                self.agent.move(DOWN)
+                # Arrivée au coffre
+                self.agent.move(LEFT)
+                self.agent.move(LEFT)
+                self.agent.move(LEFT)
+            elif self.agent.msg["cell_val"] == 0.6:
+                self.agent.move(DOWN)
+                # Arrivée au coffre 
+                self.agent.move(DOWN_LEFT)
+                self.agent.move(LEFT)
+                self.agent.move(LEFT)
+            else:
+                # Arrivée au coffre
+                self.agent.move(DOWN_LEFT)
+                self.agent.move(DOWN_LEFT)
+                self.agent.move(LEFT)                                             
+        else:
+            self.agent.move(DOWN_RIGHT)
+            self.agent.move(DOWN_LEFT)
+            self.agent.move(DOWN_LEFT)
+            if self.agent.msg["cell_val"] == 1:
+                # Arrivée au coffre
+                self.agent.move(UP_LEFT)
+                self.agent.move(UP_LEFT)
+                self.agent.move(LEFT)
+            else:
+                self.agent.move(UP)
+                # Arrivée au coffre
+                self.agent.move(UP_LEFT)
+                self.agent.move(LEFT)
+                self.agent.move(LEFT)
 
     def strat1(self):
         ''' Strategy 1 aim to move up and down with a lateral movement of detection range size '''
@@ -89,15 +327,29 @@ class strategy:
                     if self.agent.msg["cell_val"] == 0.25:
                         self.search_key_down()
                         continue
+                    elif self.agent.msg["cell_val"] == 0.3:
+                        self.search_chest_down()
+                        continue 
                 elif h_direction == up_edge:
                     self.agent.move(UP)
                     if self.agent.msg["cell_val"] == 0.25:
                         self.search_key_up()
                         continue
+                    elif self.agent.msg["cell_val"] == 0.3:
+                        self.search_chest_up()
+                        continue
         
             ''' 5 steps on the right cells '''
             for i in range(2*detection_range + 1):
                 self.agent.move(RIGHT)
+                if self.agent.msg["cell_val"] == 0.25:
+                        self.search_key_right()
+                        continue
+                elif self.agent.msg["cell_val"] == 0.3:
+                        self.search_chest_right()
+                        #break
+                
+                
             
             ''' Handle the direction of y '''
             if self.agent.y == down_edge: # Go UP

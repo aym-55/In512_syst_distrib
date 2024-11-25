@@ -113,6 +113,12 @@ class Agent:
     def get_map_boundaries(self):
         return (self.w, self.h)
 
+    def send_msg(self,msg_type):
+        control_command = {"header":BROADCAST_MSG}  
+        control_command["Msg type"] = msg_type      # Set the message type frame
+        self.network.send(control_command)          # Send the command
+        return 
+    
     def move(self, direction):
         control_command = {"header":MOVE}           # Set the header frame
         control_command["direction"] = direction    # Set the direction frame
@@ -149,8 +155,8 @@ class Agent:
 
     def go_to_point(self, coord):
         ''' Lead the agent to the given tuple coordonates '''
-        x_goal = coord[0]-1
-        y_goal = coord[1]-1
+        x_goal = coord[0]
+        y_goal = coord[1]
 
         if (x_goal < 0 and x_goal > self.h) and (y_goal < 0 and y_goal > self.w):
             ''' Checking the map outbounds '''
@@ -186,7 +192,8 @@ class Agent:
 
                 ''' Point has been reached by the agent '''
                 if y_direction == x_direction:
-                    return 0
+                    self.move(STAND)
+                    
                 
 
  
