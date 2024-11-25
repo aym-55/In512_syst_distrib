@@ -5,7 +5,11 @@ __license__ = "Apache License 2.0"
 __version__ = "1.0.0"
 
 import pygame, os
-from my_constants import * 
+
+if __name__ == "__main__" or __name__=="gui":
+    from my_constants import * 
+else:
+    from .my_constants import * 
 
 img_folder = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "resources", "img")
 

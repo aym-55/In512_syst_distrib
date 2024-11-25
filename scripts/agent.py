@@ -4,13 +4,19 @@ __credits__ = ["Aybuke Ozturk Suri", "Johvany Gustave"]
 __license__ = "Apache License 2.0"
 __version__ = "1.0.0"
 
-from network import Network
-from my_constants import *
+if __name__ == "__main__":
+    from network import Network
+    from my_constants import *
+
+else:
+    from .network import Network
+    from .my_constants import *
 
 from threading import Thread
 import numpy as np
 from time import sleep
 
+import matplotlib.pyplot as plt
 
 class Agent:
     """ Class that implements the behaviour of each agent based on their perception and communication with other agents """
@@ -29,6 +35,7 @@ class Agent:
         self.x, self.y = env_conf["x"], env_conf["y"]   #initial agent position
         self.w, self.h = env_conf["w"], env_conf["h"]   #environment dimensions
         cell_val = env_conf["cell_val"] #value of the cell the agent is located in
+        self.map = np.full((self.h, self.w), np.nan)
         print(cell_val)
         Thread(target=self.msg_cb, daemon=True).start()
         print("hello")
@@ -48,6 +55,8 @@ class Agent:
             elif msg["header"] == GET_NB_CONNECTED_AGENTS:
                 self.nb_agent_connected = msg["nb_connected_agents"]
 
+            self.update_map()
+
             print("hellooo: ", msg)
             print("agent_id ", self.agent_id)
             
@@ -63,8 +72,123 @@ class Agent:
                   
 
     #TODO: CREATE YOUR METHODS HERE...
+    def update_map(self):
+        """ Update self.map with cell value """
+        try :
+            self.map[self.y, self.x] = self.msg["cell_val"] # Extract the cell value
+            return 0
 
+        except Exception as e:
+            # Sometime value is 31 for axis 1
+            print(f'Map not updated : {e}') 
+            return 1
+        
+
+    def show_map(self):
+        """Affiche la carte en utilisant pyplot, mise à jour en temps réel."""
+        plt.ion()
+        fig, ax = plt.subplots()
+        cax = ax.imshow(self.map, cmap='Reds', vmin=0, vmax=1, interpolation='none')
+        fig.colorbar(cax, label='Value')
+
+        plt.title('Agent Heatmap')
+        plt.xlabel('Y')
+        plt.ylabel('X')
+
+        cax.set_data(self.map)  # Update map
+        fig.canvas.draw()
+        
+        plt.show() 
+
+
+    def get_position(self):
+        return (self.x, self.y)
+    
+    def get_map(self):
+        return self.map
+    
+    def get_cell(self):
+        return self.msg['cell_val']
+    
+    def get_map_boundaries(self):
+        return (self.w, self.h)
+
+    def move(self, direction):
+        control_command = {"header":MOVE}           # Set the header frame
+        control_command["direction"] = direction    # Set the direction frame
+        self.network.send(control_command)          # Send the command
+        sleep(0.1)
+        return 0
+
+
+    def controller(self):
+
+        while True:
+            data = str(input("")).lower()
+
+            if data == "x":
+                ''' EXIT '''
+                print("EXITING Controller...")
+                return
             
+            elif data == "z":
+                ''' UP '''
+                self.move(UP)
+
+            elif data == "q":
+                ''' LEFT '''
+                self.move(LEFT)
+
+            elif data == "s":
+                ''' DOWN '''
+                self.move(DOWN)
+
+            elif data == "d":
+                ''' RIGHT '''
+                self.move(RIGHT)
+
+    def go_to_point(self, coord):
+        ''' Lead the agent to the given tuple coordonates '''
+        x_goal = coord[0]-1
+        y_goal = coord[1]-1
+
+        if (x_goal < 0 and x_goal > self.h) and (y_goal < 0 and y_goal > self.w):
+            ''' Checking the map outbounds '''
+            print(f'Point ({x_goal}, {y_goal}) is out of bound !\nExiting...')
+            return 1
+
+        else : 
+            print(f'Going to point ({x_goal}, {y_goal})')
+
+            ''' Checking for the direction on x '''
+            if x_goal <= self.x :
+                x_direction = LEFT
+            else:
+                x_direction = RIGHT
+
+            ''' Checking for the direction on y '''
+            if y_goal <= self.y :
+                y_direction = UP
+            else:
+                y_direction = DOWN
+
+            while True:
+                ''' Increment step to the given direction (not using diagonal yet) '''
+                if x_goal == self.x :      # X goal is reached
+                    x_direction = STAND 
+                else:
+                    self.move(x_direction) # Carry on X
+
+                if y_goal == self.y :      # Y goal is reached
+                    y_direction = STAND
+                else:
+                    self.move(y_direction) # Carry on Y
+
+                ''' Point has been reached by the agent '''
+                if y_direction == x_direction:
+                    return 0
+                
+
  
 if __name__ == "__main__":
     from random import randint
@@ -79,11 +203,11 @@ if __name__ == "__main__":
         while True:
             cmds = {"header": int(input("0 <-> Broadcast msg\n1 <-> Get data\n2 <-> Move\n3 <-> Get nb connected agents\n4 <-> Get nb agents\n5 <-> Get item owner\n"))}
             if cmds["header"] == BROADCAST_MSG:
-                cmds["Msg type"] = int(input("1 <-> Key discovered\n2 <-> Box discovered\n3 <-> Completed\n"))
+                cmds["Msg type"] = int(input("\t1 <-> Key discovered\n\t2 <-> Box discovered\n\t3 <-> Completed\n"))
                 cmds["position"] = (agent.x, agent.y)
                 cmds["owner"] = randint(0,3) # TODO: specify the owner of the item
             elif cmds["header"] == MOVE:
-                cmds["direction"] = int(input("0 <-> Stand\n1 <-> Left\n2 <-> Right\n3 <-> Up\n4 <-> Down\n5 <-> UL\n6 <-> UR\n7 <-> DL\n8 <-> DR\n"))
+                cmds["direction"] = int(input("\t0 <-> Stand\n\t1 <-> Left\n\t2 <-> Right\n\t3 <-> Up\n\t4 <-> Down\n\t5 <-> UL\n\t6 <-> UR\n\t7 <-> DL\n\t8 <-> DR\n"))
             agent.network.send(cmds)
     except KeyboardInterrupt:
         pass

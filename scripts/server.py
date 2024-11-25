@@ -8,8 +8,14 @@ __version__ = "1.0.0"
 import socket, pickle
 from threading import Thread, Lock
 import sys, argparse, os
-from game import Game
-from my_constants import *
+
+if __name__ == '__main__':
+    from game import Game
+    from my_constants import *
+else:
+    from .game import Game
+    from .my_constants import *
+
 from time import sleep
 
 if os.name == "nt": #If you are on Windows
