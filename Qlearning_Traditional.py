@@ -71,7 +71,7 @@ class Qlearning:
             ''' If no npy file to load start from scratch '''
             self.Q = np.zeros((4, self.map_real.shape[0], self.map_real.shape[1]))
             self.last_episode = 0
-            print(f"\n\nNo old run found starting ({self.last_episode})\n\n")
+            print(f"\nNo old run found starting ({self.last_episode})")
 
         else:
             ''' If training file loaded start from this file '''
@@ -84,7 +84,7 @@ class Qlearning:
                     last_file    = file
                     self.last_episode = current_episode
 
-            print(f"\n\nOld run found ({self.last_episode})\n\n")
+            print(f"\nOld run found ({self.last_episode})")
             self.Q = np.load(path+last_file)
 
 
