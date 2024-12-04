@@ -151,7 +151,7 @@ class Qlearning:
 
         elif is_inside_the_map and (self.map_real[x, y] != 0) :
             ''' If the agent find a nearby reward cell_valuex10 '''
-            reward = self.map_real[x, y]*10
+            reward = self.map_real[x, y]*100
 
         elif is_inside_the_map and (self.map_real[x, y] == 0):
             ''' If the agent did not find anything reward is -10 '''
