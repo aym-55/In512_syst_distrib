@@ -9,7 +9,7 @@ import random
 import time
 import os
 
-class Qlearning:
+class SCSF_Qlearning:
 
     def __init__(self):
 
@@ -71,7 +71,7 @@ class Qlearning:
             ''' If no npy file to load start from scratch '''
             self.Q = np.zeros((4, self.map_real.shape[0], self.map_real.shape[1]))
             self.last_episode = 0
-            print(f"\nNo old run found starting ({self.last_episode})")
+            print(f"\n\nNo old run found starting ({self.last_episode})\n\n")
 
         else:
             ''' If training file loaded start from this file '''
@@ -84,14 +84,14 @@ class Qlearning:
                     last_file    = file
                     self.last_episode = current_episode
 
-            print(f"\nOld run found ({self.last_episode})")
+            print(f"\n\nOld run found ({self.last_episode})\n\n")
             self.Q = np.load(path+last_file)
 
 
         ''' Training settings '''
-        self.alpha           = 0.1  # Global learning rate
+        self.alpha           = 0.3  # Global learning rate
         self.gamma           = 0.9  # Reward rate
-        self.epsilon_decay   = 0.99 # Episode rate
+        self.epsilon_decay   = 0.95 # Episode rate
 
 
     def get_action(self,state, action):
@@ -151,7 +151,7 @@ class Qlearning:
 
         elif is_inside_the_map and (self.map_real[x, y] != 0) :
             ''' If the agent find a nearby reward cell_valuex10 '''
-            reward = self.map_real[x, y]*100
+            reward = self.map_real[x, y]*10
 
         elif is_inside_the_map and (self.map_real[x, y] == 0):
             ''' If the agent did not find anything reward is -10 '''
@@ -168,14 +168,14 @@ class Qlearning:
         return (x_next, y_next), reward, done
 
 
-    def traditional_Qlearning(self, n_episode, from_start=False):
+    def Qlearning(self, n_episode, from_start=False):
         '''
         This is the traditional Qlearning Algorithm :
             It is taking the using the current state and the next one
             to evaluate the better action to do while being on a cell
         '''
 
-        path_traditional = "./results/Qlearning_Traditional/"
+        path_traditional = "./results/Qlearning_scsf/"
         self.get_latest_training(path_traditional)
 
         if from_start:
@@ -204,27 +204,27 @@ class Qlearning:
 
                 next_state, reward, done = self.get_action(state, action)
 
-                self.Q[action, state[0], state[1]] += self.alpha * (
-                    reward + self.gamma * np.max(self.Q[:, next_state[0], next_state[1]]) - self.Q[action, state[0], state[1]]
+                self.Q[action, state[0], state[1]] = (1-self.alpha)*self.Q[action, state[0], state[1]] + self.alpha*(
+                    reward + self.gamma * np.max(self.Q[:, next_state[0], next_state[1]]) 
                 )
 
                 state = next_state
 
             epsilon *= self.epsilon_decay # Increase the episode rate
 
-        np.save(f"{path_traditional}{int(self.episode)}.npy", self.Q)
+        np.save(f"{path_traditional}scsf_{int(self.episode)}.npy", self.Q)
         input("\n\nDONE ! [Press Enter to terminate]")
 
-    def traditionalRandom_Qlearning(self, n_episode, from_start=False):
+    def Random_Qlearning(self, n_episode, from_start=False, confirmation=True):
         '''
-        This is the traditional Qlearning Algorithm Random :
+        This is the Qlearning Algorithm Random :
             It is using the same agldorithm than previously except
             every epsiode start at a random position to explore more
             path options.
         '''
 
-        path_traditionalRandom = "./results/Qlearning_TraditionalRandom/"
-        self.get_latest_training(path_traditionalRandom)
+        path_Random = "./results/Qlearning_scsfRandom/"
+        self.get_latest_training(path_Random)
 
         if from_start:
             print("Restart Training...")
@@ -257,19 +257,25 @@ class Qlearning:
 
                 next_state, reward, done = self.get_action(state, action)
 
-                self.Q[action, state[0], state[1]] += self.alpha * (
-                    reward + self.gamma * np.max(self.Q[:, next_state[0], next_state[1]]) - self.Q[action, state[0], state[1]]
+                self.Q[action, state[0], state[1]] = (1-self.alpha)*self.Q[action, state[0], state[1]] + self.alpha*(
+                    reward + self.gamma * np.max(self.Q[:, next_state[0], next_state[1]]) 
                 )
 
                 state = next_state
 
             epsilon *= self.epsilon_decay # Increase the episode rate
 
-        np.save(f"{path_traditionalRandom}Random_{int(self.episode)}.npy", self.Q)
-        input("\n\nDONE ! [Press Enter to terminate]")
+        np.save(f"{path_Random}scsfRandom_{int(self.episode)}.npy", self.Q)
+
+        if confirmation :
+            input("\n\nDONE ! [Press Enter to terminate]")
 
 
 if __name__ =='__main__':
 
-    training = Qlearning()
-    training.traditionalRandom_Qlearning(5000,from_start=True)
+    training = SCSF_Qlearning()
+    for ep in range(1200, 100000, 100) :
+        try :
+            training.Random_Qlearning(ep, from_start=True, confirmation=False)
+        except Exception as e:
+            print(f'ERROR => {e}')

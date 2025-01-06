@@ -36,4 +36,4 @@ def launch_qtable(path_qtable):
 
 if __name__ == '__main__':
 
-    launch_qtable("results/Qlearning_TraditionalRandom/Random_100000.npy")
+    launch_qtable("results/Qlearning_scsfRandom/scsfRandom_100000.npy")
