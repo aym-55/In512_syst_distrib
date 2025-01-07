@@ -7,16 +7,17 @@ import seaborn as sns
 from threading import Thread
 
 def launch_qtable(path_qtable):
-
+    '''
+    path_qtable has to refer to a decision map within the folder "results".
+    path_qtable will then import a .npy file
+    '''
     Q           = np.load(path_qtable)
     action_max  = np.argmax(Q, axis=0)
     actions     = {0:UP, 1:DOWN, 3:LEFT, 2:RIGHT}
     actions_str = {0:"UP", 1:"DOWN", 2:"RIGHT", 3:'LEFT'}
     agent       = Agent("localhost")
-    """
-    sns.heatmap(action_max)
-    plt.show(block=True)
-    """
+
+    # Intialize a first move
     agent.move(LEFT)
     agent.move(RIGHT)
 
@@ -25,6 +26,7 @@ def launch_qtable(path_qtable):
     while agent.get_cell() != 1:
         x, y = agent.get_position()
 
+        # Get the action on the decision map
         action = action_max[y, x] 
         print(f'\nX is {x} Y is {y}')
         print(action)

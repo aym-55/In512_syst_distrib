@@ -2,4 +2,3 @@
 test/*.py
 test/*.ipynb
 test_*
-results/Qlearning_*

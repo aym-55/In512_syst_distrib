@@ -1,72 +1,39 @@
 # IN512_Project
 
-## Install Pygame
-Pygame is a python package used to generate the simulated environments of this project.
-If not yet installed, open a terminal and run the following instruction:
-```bash
-pip install pygame  #On Windows
-pip3 install pygame #On MAC OS
-```
+*authors : A.LEGRAND, T.MONSELLIER, M.VINATIER*
 
-If you have any difficulty with the installation, please call your teacher.
+---
 
-## Git
-### Install Git
-Git is a tool used for source code management. You can use it to create your own version of the project and share it with your group members. GitHub will be used to host your repository.</br>
-To check if git is already installed on your computer, open a terminal and enter: **git**. If an error appears, you have to install it using [this link](https://git-scm.com/downloads).
+Based on the Reinforcement Learning "Qlearning" method our team wanted to build an effective path in between the key and the chest of the map for our agent. In order to do that, a fully completed and eexplored map had to be created. To explore the map, our team decided to attribute areas splitted byn the number of agent on the map. Each agent has its own boundary within they have to find the chests and keys. In their areas, the agent will go like a snake in order to detect point of interest.
 
-### Configure git for GitHub
-If you planned to create your own GitHub repository for this project, [create a GitHub account](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home) if you don't already have one.</br>
-Once the account is created, open a terminal to enter details about your GitHub account so that git will be able to manipulate your future projects:
-```bash
-git config --global user.name "Your GitHub username"
-git config --global user.email "The email address used when you created your GitHub account"
-```
+---
 
-## Clone the repository
-To have a local version of this GitHub repository, you have to clone it. Run the following instructions in a terminal:
-<!-- ### Clone it with VS Code
-1. Copy the url of the repository
-2. On VS Code, press **Ctrl + Shift + P** (on Windows) or **Cmd + Shift + P** (on MAC OS) to open the command palette.
-3. Press **clone** then click on **Gt:clone**.
-4. Paste the url copied from step 1 then press 'Enter'.
-5. In the pop-up window, specify where you want to clone the project.
+## Results
 
-### Clone it with command lines
-Another solution is to open a terminal and run: -->
-```bash
-cd your_desired_path
-git clone https://github.com/AybukeOzturk/In512_Project_Student
-```
+The Results folder is where all the Qlearning decision matrices are exported. In order to use one, this is where you can import it.
 
-## Instructions to run the scripts
-### Run the application with 2 agents, locally
-1. Run the server
-```bash
-python scripts/server.py -nb 2 #On windows
-python3 scripts/server.py -nb 2 #On MAC OS
-```
+## Scripts
 
-2. Open two other terminals and run, **for each of them**, the following instruction:
-```bash
-python scripts/agent.py #On windows
-python3 scripts/agent.py #On MAC OS
-```
+Script is the folder you can import in your codes to make its classes and methods easier to manipulate.
 
-Once both terminals run the agent script, the environment should appear.
+## Files
 
+### Qlearning
 
-### Run the application with 2 agents on several computers
-1. Run the server on one of the computers by specifing its ip address (for instance if the computer's ip address is 10.9.157.250):
-```bash
-python scripts/server.py -nb 2 -i 10.9.157.250 #On windows
-python3 scripts/server.py -nb 2 -i 10.9.157.250 #On MAC OS
-```
+- **Qlearning_Traditional.py** : Is using the common QLearning algorithm to create the decision matrix. This file is used to train the model.
 
-2. On each computer, run one of the agents as follow:
-```bash
-python scripts/agent.py -i 10.9.157.250 #On windows
-python3 scripts/agent.py -i 10.9.157.250 #On MAC OS
-```
+- **Qlearning_SCSF.py** : Is using the State Chain Sequential Feedback method for the QLearning algorithm to create the decision matrix. This file is used to train the model.
 
-Once both terminals run the agent script, the environment should appear on the computer that hosts the server.
+- **Qlearning_Table.ipynb** : Is used to perform review of the decision matrices.
+
+- **Qlearning_launchSmartAgent.py** : Is using a given decision matrix to launch an agent using it.
+
+### Strategies file
+
+- **strategies.py** : Is where you will find the different methods that has been assembled to create a strategy.
+
+### Start files
+
+- **start_agent.py** : Is using the agent class to link it with the strategies. Also some usefull function to manipulate the agent are given here.
+
+- **start_server.py** : Launch the server map.
