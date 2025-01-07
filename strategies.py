@@ -9,6 +9,7 @@ class strategy:
         self.agent = _agent
 
     def search_key_down(self):
+        print("Search Key down")
         self.agent.move(DOWN_LEFT)
         if self.agent.msg["cell_val"] == 0.5:
             self.agent.move(DOWN_LEFT)
@@ -47,6 +48,7 @@ class strategy:
                 self.agent.move(DOWN)
 
     def search_key_up(self):
+        print("Search Key up")
         self.agent.move(UP_LEFT)
         if self.agent.msg["cell_val"] == 0.5:
             self.agent.move(UP_LEFT)
@@ -85,6 +87,7 @@ class strategy:
                 self.agent.move(UP)
 
     def search_key_right(self):
+        print("Search Key right")
         self.agent.move(UP_RIGHT)
         if self.agent.msg["cell_val"] == 0.5:
             self.agent.move(UP_RIGHT)
@@ -103,10 +106,9 @@ class strategy:
                 self.agent.move(RIGHT)
             else:
                 # Arrivée à la clé
+                print("Key found mgl !!!") 
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN_RIGHT)
-                self.agent.move(RIGHT)
-                print("Key found !!!") 
                 ## Condition à completer                                          
         else:
             self.agent.move(DOWN_LEFT)
@@ -125,7 +127,8 @@ class strategy:
                 self.agent.move(RIGHT)
                 
     def search_key_left(self):
-        self.agent.move(UP_RIGHT)
+        print("Search Key left")
+        self.agent.move(UP_LEFT)
         if self.agent.msg["cell_val"] == 0.5:
             self.agent.move(UP_LEFT)
             if self.agent.msg["cell_val"] == 0.25:
@@ -163,6 +166,7 @@ class strategy:
                 self.agent.move(LEFT)
 
     def search_chest_down(self):
+        print("Search Chest down")
         self.agent.move(DOWN_LEFT)
         if self.agent.msg["cell_val"] == 0.6:
             self.agent.move(DOWN_LEFT)
@@ -201,6 +205,7 @@ class strategy:
                 self.agent.move(DOWN)
 
     def search_chest_up(self):
+        print("Search Chest up")
         self.agent.move(UP_LEFT)
         if self.agent.msg["cell_val"] == 0.6:
             self.agent.move(UP_LEFT)
@@ -239,6 +244,7 @@ class strategy:
                 self.agent.move(UP)
 
     def search_chest_right(self):
+        print("Search Chest right")
         self.agent.move(UP_RIGHT)
         if self.agent.msg["cell_val"] == 0.6:
             self.agent.move(UP_RIGHT)
@@ -277,7 +283,8 @@ class strategy:
                 self.agent.move(RIGHT)
                 
     def search_chest_left(self):
-        self.agent.move(UP_RIGHT)
+        print("Search Chest left")
+        self.agent.move(UP_LEFT)
         if self.agent.msg["cell_val"] == 0.6:
             self.agent.move(UP_LEFT)
             if self.agent.msg["cell_val"] == 0.3:
@@ -340,43 +347,54 @@ class strategy:
                 h_direction = down_edge
                 w_direction = 'right'
 
-        while self.agent.x != self.agent.w-1:     
+        while (self.agent.x != self.agent.w-1) and (self.agent.x != 0):     
             while self.agent.y != h_direction:
                 ''' While the limit is not reach carry on the given y direcion '''
                 if h_direction == down_edge:
-                    self.agent.move(DOWN)
                     if self.agent.msg["cell_val"] == 0.25:
                         self.search_key_down()
-                        continue
                     elif self.agent.msg["cell_val"] == 0.3:
                         self.search_chest_down()
-                        continue 
+                    self.agent.move(DOWN)
                 elif h_direction == up_edge:
-                    self.agent.move(UP)
                     if self.agent.msg["cell_val"] == 0.25:
                         self.search_key_up()
-                        continue
                     elif self.agent.msg["cell_val"] == 0.3:
                         self.search_chest_up()
-                        continue
-        
+                    self.agent.move(UP)
+
+            hist_tile = self.agent.get_position()        
             for i in range(2*detection_range + 1):
                 if w_direction == 'right':
                     self.agent.move(RIGHT)
                     if self.agent.msg["cell_val"] == 0.25:
+                        hist_tile = self.agent.get_position()
                         self.search_key_right()
-                        continue
+                        if np.abs(self.agent.get_position()[0]-hist_tile[0])>5 :
+                            while np.abs(self.agent.get_position()[0]-hist_tile[0])!=5:
+                                self.agent.move(LEFT)
+                        break
+
                     elif self.agent.msg["cell_val"] == 0.3:
                         self.search_chest_right()
-                        continue 
+                        if np.abs(self.agent.get_position()[0]-hist_tile[0])>5 :
+                            while np.abs(self.agent.get_position()[0]-hist_tile[0])!=5:
+                                self.agent.move(LEFT)
+                        break
                 elif w_direction == 'left':
                     self.agent.move(LEFT)
                     if self.agent.msg["cell_val"] == 0.25:
                         self.search_key_left()
-                        continue
+                        if np.abs(self.agent.get_position()[0]-hist_tile[0])>5 :
+                            while np.abs(self.agent.get_position()[0]-hist_tile[0])!=5:
+                                self.agent.move(RIGHT)
+                        break 
                     elif self.agent.msg["cell_val"] == 0.3:
                         self.search_chest_left()
-                        continue    
+                        if np.abs(self.agent.get_position()[0]-hist_tile[0])>5 :
+                            while np.abs(self.agent.get_position()[0]-hist_tile[0])!=5:
+                                self.agent.move(RIGHT)
+                        break 
             
             ''' Handle the direction of y '''
             if self.agent.y == down_edge: # Go UP
