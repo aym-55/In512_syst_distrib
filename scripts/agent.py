@@ -154,48 +154,49 @@ class Agent:
                 self.move(RIGHT)
 
     def go_to_point(self, coord):
-        ''' Lead the agent to the given tuple coordonates '''
+        ''' Lead the agent to the given tuple coordinates '''
         x_goal = coord[0]
         y_goal = coord[1]
 
-        if (x_goal < 0 and x_goal > self.h) and (y_goal < 0 and y_goal > self.w):
+        if (x_goal < 0 or x_goal > self.w) or (y_goal < 0 or y_goal > self.h):
             ''' Checking the map outbounds '''
-            print(f'Point ({x_goal}, {y_goal}) is out of bound !\nExiting...')
+            print(f'Point ({x_goal}, {y_goal}) is out of bound! Exiting...')
             return 1
 
-        else : 
+        else:
             print(f'Going to point ({x_goal}, {y_goal})')
 
-            ''' Checking for the direction on x '''
-            if x_goal <= self.x :
-                x_direction = LEFT
-            else:
-                x_direction = RIGHT
-
-            ''' Checking for the direction on y '''
-            if y_goal <= self.y :
-                y_direction = UP
-            else:
-                y_direction = DOWN
-
             while True:
-                ''' Increment step to the given direction (not using diagonal yet) '''
-                if x_goal == self.x :      # X goal is reached
-                    x_direction = STAND 
-                else:
-                    self.move(x_direction) # Carry on X
+                # Calculate the differences in coordinates
+                dx = x_goal - self.x
+                dy = y_goal - self.y
 
-                if y_goal == self.y :      # Y goal is reached
-                    y_direction = STAND
-                else:
-                    self.move(y_direction) # Carry on Y
+                # If the point has been reached
+                if dx == 0 and dy == 0:
+                    print(f"Point ({x_goal}, {y_goal}) reached!")
+                    return 0
 
-                ''' Point has been reached by the agent '''
-                if y_direction == x_direction:
-                    self.move(STAND)
+                # Determine diagonal movement
+                if dx != 0 and dy != 0:
+                    if dx > 0 and dy > 0:
+                        direction = DOWN_RIGHT
+                    elif dx > 0 and dy < 0:
+                        direction = UP_RIGHT
+                    elif dx < 0 and dy > 0:
+                        direction = DOWN_LEFT
+                    elif dx < 0 and dy < 0:
+                        direction = UP_LEFT
+                    self.move(direction)
+
+                # Handle non-diagonal movement when aligned on one axis
+                elif dx != 0:
+                    direction = RIGHT if dx > 0 else LEFT
+                    self.move(direction)
+                elif dy != 0:
+                    direction = DOWN if dy > 0 else UP
+                    self.move(direction)
+
                     
-                
-
  
 if __name__ == "__main__":
     from random import randint

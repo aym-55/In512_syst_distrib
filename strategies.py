@@ -105,7 +105,9 @@ class strategy:
                 # Arrivée à la clé
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN_RIGHT)
-                self.agent.move(RIGHT)                                             
+                self.agent.move(RIGHT)
+                print("Key found !!!") 
+                ## Condition à completer                                          
         else:
             self.agent.move(DOWN_LEFT)
             self.agent.move(DOWN_RIGHT)
@@ -313,12 +315,31 @@ class strategy:
                 self.agent.move(LEFT)
 
     def strat1(self):
-        ''' Strategy 1 aim to move up and down with a lateral movement of detection range size '''
+        ''' Strategy 1: Move in a serpentine pattern covering the entire grid '''
         detection_range = 2
-        up_edge         = detection_range
-        down_edge       = self.agent.h - detection_range - 1
+        up_edge = detection_range
+        down_edge = self.agent.h - detection_range - 1
 
-        h_direction     = down_edge  # Go DOWN
+        # Move to the nearest corner
+        if self.agent.x > self.agent.w/2:
+            if self.agent.y > self.agent.h/2:
+                self.agent.go_to_point((self.agent.w-3,self.agent.h-3))
+                h_direction = up_edge
+                w_direction = 'left'
+            else:
+                self.agent.go_to_point((self.agent.w-3,2))
+                h_direction = down_edge
+                w_direction = 'left'
+        else :
+            if self.agent.y > self.agent.h/2:
+                self.agent.go_to_point((2,self.agent.h-3))
+                h_direction = up_edge
+                w_direction = 'right'
+            else:
+                self.agent.go_to_point((2,2))
+                h_direction = down_edge
+                w_direction = 'right'
+
         while self.agent.x != self.agent.w-1:     
             while self.agent.y != h_direction:
                 ''' While the limit is not reach carry on the given y direcion '''
@@ -339,17 +360,23 @@ class strategy:
                         self.search_chest_up()
                         continue
         
-            ''' 5 steps on the right cells '''
             for i in range(2*detection_range + 1):
-                self.agent.move(RIGHT)
-                if self.agent.msg["cell_val"] == 0.25:
+                if w_direction == 'right':
+                    self.agent.move(RIGHT)
+                    if self.agent.msg["cell_val"] == 0.25:
                         self.search_key_right()
                         continue
-                elif self.agent.msg["cell_val"] == 0.3:
+                    elif self.agent.msg["cell_val"] == 0.3:
                         self.search_chest_right()
-                        #break
-                
-                
+                        continue 
+                elif w_direction == 'left':
+                    self.agent.move(LEFT)
+                    if self.agent.msg["cell_val"] == 0.25:
+                        self.search_key_left()
+                        continue
+                    elif self.agent.msg["cell_val"] == 0.3:
+                        self.search_chest_left()
+                        continue    
             
             ''' Handle the direction of y '''
             if self.agent.y == down_edge: # Go UP
