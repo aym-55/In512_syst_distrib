@@ -20,27 +20,35 @@ class strategy:
             except:
                 is_nb_missing = True
 
+    def object_found(self, type=1):
+        if self.agent.get_cell() == 1:
+            self.agent.send_msg(KEY_DISCOVERED)
+        return
+        
 
     def search_key_down(self):
         print("Search Key down")
         self.agent.move(DOWN_LEFT)
-        if self.agent.msg["cell_val"] == 0.5:
+        if self.agent.get_cell() == 0.5:
             self.agent.move(DOWN_LEFT)
-            if self.agent.msg["cell_val"] == 0.25:
+            if self.agent.get_cell() == 0.25:
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
-            elif self.agent.msg["cell_val"] == 0.5:
+            elif self.agent.get_cell() == 0.5:
                 self.agent.move(RIGHT)
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN)
                 self.agent.move(DOWN) 
             else:
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN)                                                
@@ -48,14 +56,16 @@ class strategy:
             self.agent.move(UP_RIGHT)
             self.agent.move(DOWN_RIGHT)
             self.agent.move(DOWN_RIGHT)
-            if self.agent.msg["cell_val"] == 1:
+            if self.agent.get_cell() == 1:
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN)
             else:
                 self.agent.move(LEFT)
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
@@ -63,23 +73,26 @@ class strategy:
     def search_key_up(self):
         print("Search Key up")
         self.agent.move(UP_LEFT)
-        if self.agent.msg["cell_val"] == 0.5:
+        if self.agent.get_cell() == 0.5:
             self.agent.move(UP_LEFT)
-            if self.agent.msg["cell_val"] == 0.25:
+            if self.agent.get_cell() == 0.25:
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(UP)
                 self.agent.move(UP)
                 self.agent.move(UP)
-            elif self.agent.msg["cell_val"] == 0.5:
+            elif self.agent.get_cell() == 0.5:
                 self.agent.move(RIGHT)
                 # Arrivée à la clé 
+                self.object_found()
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP)
                 self.agent.move(UP)
             else:
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP)                                           
@@ -87,14 +100,16 @@ class strategy:
             self.agent.move(DOWN_RIGHT)
             self.agent.move(UP_RIGHT)
             self.agent.move(UP_RIGHT)
-            if self.agent.msg["cell_val"] == 1:
+            if self.agent.get_cell() == 1:
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP)
             else:
                 self.agent.move(LEFT)
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP)
                 self.agent.move(UP)
@@ -102,24 +117,26 @@ class strategy:
     def search_key_right(self):
         print("Search Key right")
         self.agent.move(UP_RIGHT)
-        if self.agent.msg["cell_val"] == 0.5:
+        if self.agent.get_cell() == 0.5:
             self.agent.move(UP_RIGHT)
-            if self.agent.msg["cell_val"] == 0.25:
+            if self.agent.get_cell() == 0.25:
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
-            elif self.agent.msg["cell_val"] == 0.5:
+            elif self.agent.get_cell() == 0.5:
                 self.agent.move(DOWN)
                 # Arrivée à la clé 
+                self.object_found()
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
             else:
                 # Arrivée à la clé
-                print("Key found mgl !!!") 
+                self.object_found()
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN_RIGHT)
                 ## Condition à completer                                          
@@ -127,14 +144,16 @@ class strategy:
             self.agent.move(DOWN_LEFT)
             self.agent.move(DOWN_RIGHT)
             self.agent.move(DOWN_RIGHT)
-            if self.agent.msg["cell_val"] == 1:
+            if self.agent.get_cell() == 1:
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(RIGHT)
             else:
                 self.agent.move(UP)
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(UP_RIGHT)
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
@@ -142,23 +161,26 @@ class strategy:
     def search_key_left(self):
         print("Search Key left")
         self.agent.move(UP_LEFT)
-        if self.agent.msg["cell_val"] == 0.5:
+        if self.agent.get_cell() == 0.5:
             self.agent.move(UP_LEFT)
-            if self.agent.msg["cell_val"] == 0.25:
+            if self.agent.get_cell() == 0.25:
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
-            elif self.agent.msg["cell_val"] == 0.5:
+            elif self.agent.get_cell() == 0.5:
                 self.agent.move(DOWN)
                 # Arrivée à la clé 
+                self.object_found()
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
             else:
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(LEFT)                                             
@@ -166,14 +188,16 @@ class strategy:
             self.agent.move(DOWN_RIGHT)
             self.agent.move(DOWN_LEFT)
             self.agent.move(DOWN_LEFT)
-            if self.agent.msg["cell_val"] == 1:
+            if self.agent.get_cell() == 1:
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP_LEFT)
                 self.agent.move(LEFT)
             else:
                 self.agent.move(UP)
                 # Arrivée à la clé
+                self.object_found()
                 self.agent.move(UP_LEFT)
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
@@ -181,23 +205,26 @@ class strategy:
     def search_chest_down(self):
         print("Search Chest down")
         self.agent.move(DOWN_LEFT)
-        if self.agent.msg["cell_val"] == 0.6:
+        if self.agent.get_cell() == 0.6:
             self.agent.move(DOWN_LEFT)
-            if self.agent.msg["cell_val"] == 0.3:
+            if self.agent.get_cell() == 0.3:
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
-            elif self.agent.msg["cell_val"] == 0.6:
+            elif self.agent.get_cell() == 0.6:
                 self.agent.move(RIGHT)
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN)
                 self.agent.move(DOWN) 
             else:
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN)                                                
@@ -205,14 +232,16 @@ class strategy:
             self.agent.move(UP_RIGHT)
             self.agent.move(DOWN_RIGHT)
             self.agent.move(DOWN_RIGHT)
-            if self.agent.msg["cell_val"] == 1:
+            if self.agent.get_cell() == 1:
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN)
             else:
                 self.agent.move(LEFT)
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
@@ -220,23 +249,26 @@ class strategy:
     def search_chest_up(self):
         print("Search Chest up")
         self.agent.move(UP_LEFT)
-        if self.agent.msg["cell_val"] == 0.6:
+        if self.agent.get_cell() == 0.6:
             self.agent.move(UP_LEFT)
-            if self.agent.msg["cell_val"] == 0.3:
+            if self.agent.get_cell() == 0.3:
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(UP)
                 self.agent.move(UP)
                 self.agent.move(UP)
-            elif self.agent.msg["cell_val"] == 0.6:
+            elif self.agent.get_cell() == 0.6:
                 self.agent.move(RIGHT)
                 # Arrivée au coffre 
+                self.object_found()
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP)
                 self.agent.move(UP)
             else:
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP)                                           
@@ -244,14 +276,16 @@ class strategy:
             self.agent.move(DOWN_RIGHT)
             self.agent.move(UP_RIGHT)
             self.agent.move(UP_RIGHT)
-            if self.agent.msg["cell_val"] == 1:
+            if self.agent.get_cell() == 1:
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP)
             else:
                 self.agent.move(LEFT)
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP)
                 self.agent.move(UP)
@@ -259,23 +293,26 @@ class strategy:
     def search_chest_right(self):
         print("Search Chest right")
         self.agent.move(UP_RIGHT)
-        if self.agent.msg["cell_val"] == 0.6:
+        if self.agent.get_cell() == 0.6:
             self.agent.move(UP_RIGHT)
-            if self.agent.msg["cell_val"] == 0.3:
+            if self.agent.get_cell() == 0.3:
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
-            elif self.agent.msg["cell_val"] == 0.6:
+            elif self.agent.get_cell() == 0.6:
                 self.agent.move(DOWN)
                 # Arrivée au coffre 
+                self.object_found()
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
             else:
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(RIGHT)                                             
@@ -283,14 +320,16 @@ class strategy:
             self.agent.move(DOWN_LEFT)
             self.agent.move(DOWN_RIGHT)
             self.agent.move(DOWN_RIGHT)
-            if self.agent.msg["cell_val"] == 1:
+            if self.agent.get_cell() == 1:
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(RIGHT)
             else:
                 self.agent.move(UP)
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(UP_RIGHT)
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
@@ -298,23 +337,26 @@ class strategy:
     def search_chest_left(self):
         print("Search Chest left")
         self.agent.move(UP_LEFT)
-        if self.agent.msg["cell_val"] == 0.6:
+        if self.agent.get_cell() == 0.6:
             self.agent.move(UP_LEFT)
-            if self.agent.msg["cell_val"] == 0.3:
+            if self.agent.get_cell() == 0.3:
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
-            elif self.agent.msg["cell_val"] == 0.6:
+            elif self.agent.get_cell() == 0.6:
                 self.agent.move(DOWN)
                 # Arrivée au coffre 
+                self.object_found()
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
             else:
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(LEFT)                                             
@@ -322,14 +364,16 @@ class strategy:
             self.agent.move(DOWN_RIGHT)
             self.agent.move(DOWN_LEFT)
             self.agent.move(DOWN_LEFT)
-            if self.agent.msg["cell_val"] == 1:
+            if self.agent.get_cell() == 1:
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP_LEFT)
                 self.agent.move(LEFT)
             else:
                 self.agent.move(UP)
                 # Arrivée au coffre
+                self.object_found()
                 self.agent.move(UP_LEFT)
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
@@ -417,9 +461,9 @@ class strategy:
                 ''' While the limit is not reach carry on the given y direcion '''
                 hist_tile_h = self.agent.get_position() # Save state to get back on track after the research
                 if h_direction == down_edge:
-                    if self.agent.msg["cell_val"] == 0.25:
+                    if self.agent.get_cell() == 0.25:
                         self.search_key_down()
-                    elif self.agent.msg["cell_val"] == 0.3:
+                    elif self.agent.get_cell() == 0.3:
                         self.search_chest_down()
                     if hist_tile_h[1] > down_edge:
                         self.agent.go_to_point((hist_tile_h[0], down_edge))
@@ -427,9 +471,9 @@ class strategy:
                         self.agent.move(DOWN)
                         
                 elif h_direction == up_edge:
-                    if self.agent.msg["cell_val"] == 0.25:
+                    if self.agent.get_cell() == 0.25:
                         self.search_key_up()
-                    elif self.agent.msg["cell_val"] == 0.3:
+                    elif self.agent.get_cell() == 0.3:
                         self.search_chest_up()
                     if hist_tile_h[1] < up_edge:
                         self.agent.go_to_point((hist_tile_h[0], up_edge))
@@ -442,7 +486,7 @@ class strategy:
                 ''' Lateral moves of 5 (the detection limit) '''
                 if w_direction == 'right':
                     self.agent.move(RIGHT)
-                    if self.agent.msg["cell_val"] == 0.25:
+                    if self.agent.get_cell() == 0.25:
                         hist_tile_w = self.agent.get_position()
                         self.search_key_right()
                         if np.abs(self.agent.get_position()[0]-hist_tile_w[0])>5 :
@@ -452,7 +496,7 @@ class strategy:
                             self.agent.go_to_point((self.w_boundary[1], hist_tile_w[1]))
                         break
 
-                    elif self.agent.msg["cell_val"] == 0.3:
+                    elif self.agent.get_cell() == 0.3:
                         self.search_chest_right()
                         if np.abs(self.agent.get_position()[0]-hist_tile_w[0])>5 :
                             while np.abs(self.agent.get_position()[0]-hist_tile_w[0])!=5:
@@ -463,7 +507,7 @@ class strategy:
 
                 elif w_direction == 'left':
                     self.agent.move(LEFT)
-                    if self.agent.msg["cell_val"] == 0.25:
+                    if self.agent.get_cell() == 0.25:
                         self.search_key_left()
                         if np.abs(self.agent.get_position()[0]-hist_tile_w[0])>5 :
                             while np.abs(self.agent.get_position()[0]-hist_tile_w[0])!=5:
@@ -471,7 +515,7 @@ class strategy:
                         if self.agent.x < self.w_boundary[0]:
                             self.agent.go_to_point((self.w_boundary[0], hist_tile_w[1]))
                         break
-                    elif self.agent.msg["cell_val"] == 0.3:
+                    elif self.agent.get_cell() == 0.3:
                         self.search_chest_left()
                         if np.abs(self.agent.get_position()[0]-hist_tile_w[0])>5 :
                             while np.abs(self.agent.get_position()[0]-hist_tile_w[0])!=5:

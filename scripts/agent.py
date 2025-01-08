@@ -74,14 +74,22 @@ class Agent:
     #TODO: CREATE YOUR METHODS HERE...
     def update_map(self):
         """ Update self.map with cell value """
+        
         try :
             self.map[self.y, self.x] = self.msg["cell_val"] # Extract the cell value
-            return 0
 
         except Exception as e:
             # Sometime value is 31 for axis 1
             print(f'Map not updated : {e}') 
-            return 1
+
+        try :
+            if self.msg["Msg type"] == KEY_DISCOVERED :
+                position = self.msg["position"]
+                self.map[position[1], position[0]] = 1
+        except Exception as e:
+            print(f'Msg not handled : {e}') 
+    
+
         
 
     def show_map(self):
@@ -108,6 +116,13 @@ class Agent:
         return self.map
     
     def get_cell(self):
+        for i in range(5):
+            if 'cell_val' in self.msg.keys():
+                break
+            self.network.send({"header":GET_DATA})
+            print("wait for cell_val...")
+            sleep(.1)
+
         return self.msg['cell_val']
     
     def get_map_boundaries(self):
@@ -115,8 +130,9 @@ class Agent:
 
     def send_msg(self,msg_type):
         control_command = {"header":BROADCAST_MSG}  
-        control_command["Msg type"] = msg_type      # Set the message type frame
-        self.network.send(control_command)          # Send the command
+        control_command["Msg type"] = msg_type              # Set the message type frame
+        control_command["position"] = self.get_position()   # Set the message position frame
+        self.network.send(control_command)                  # Send the command
         return 
     
     def move(self, direction):
