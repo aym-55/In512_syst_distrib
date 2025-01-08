@@ -7,8 +7,9 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-m", "--mode", help="Mode menu -> menu\n Mode connection -> connection", type=str, default="menu")
-agent = Agent("localhost")
+parser.add_argument("-i", "--server_ip", help="Ip address of the server", type=str, default="localhost")
 args = parser.parse_args()
+agent = Agent(args.server_ip)
 
 try:
     if args.mode=="menu" :
