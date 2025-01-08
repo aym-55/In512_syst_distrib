@@ -75,19 +75,21 @@ class Agent:
     def update_map(self):
         """ Update self.map with cell value """
         
+
         try :
-            self.map[self.y, self.x] = self.msg["cell_val"] # Extract the cell value
+            if "Msg type" in self.msg.keys() :
+                position = self.msg["position"]
+                self.map[position[1], position[0]] = self.msg["Msg type"]
+        except Exception as e:
+            print(f'Msg not handled : {e}') 
+
+        try :
+            if self.map[self.y, self.x] != 1 or self.map[self.y, self.x] != 2:
+                self.map[self.y, self.x] = self.msg["cell_val"] # Extract the cell value
 
         except Exception as e:
             # Sometime value is 31 for axis 1
             print(f'Map not updated : {e}') 
-
-        try :
-            if self.msg["Msg type"] == KEY_DISCOVERED :
-                position = self.msg["position"]
-                self.map[position[1], position[0]] = 1
-        except Exception as e:
-            print(f'Msg not handled : {e}') 
     
 
         
@@ -96,7 +98,7 @@ class Agent:
         """Affiche la carte en utilisant pyplot, mise à jour en temps réel."""
         plt.ion()
         fig, ax = plt.subplots()
-        cax = ax.imshow(self.map, cmap='Reds', vmin=0, vmax=1, interpolation='none')
+        cax = ax.imshow(self.map, cmap='Reds', vmin=0, vmax=2, interpolation='none')
         fig.colorbar(cax, label='Value')
 
         plt.title('Agent Heatmap')

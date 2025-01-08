@@ -20,9 +20,11 @@ class strategy:
             except:
                 is_nb_missing = True
 
-    def object_found(self, type=1):
+    def object_found(self, type):
         if self.agent.get_cell() == 1:
-            self.agent.send_msg(KEY_DISCOVERED)
+            self.agent.send_msg(type)
+            self.agent.map[self.agent.y, self.agent.x] = type
+            
         return
         
 
@@ -35,20 +37,20 @@ class strategy:
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
             elif self.agent.get_cell() == 0.5:
                 self.agent.move(RIGHT)
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN)
                 self.agent.move(DOWN) 
             else:
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN)                                                
@@ -58,14 +60,14 @@ class strategy:
             self.agent.move(DOWN_RIGHT)
             if self.agent.get_cell() == 1:
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN)
             else:
                 self.agent.move(LEFT)
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
@@ -79,20 +81,20 @@ class strategy:
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(UP)
                 self.agent.move(UP)
                 self.agent.move(UP)
             elif self.agent.get_cell() == 0.5:
                 self.agent.move(RIGHT)
                 # Arrivée à la clé 
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP)
                 self.agent.move(UP)
             else:
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP)                                           
@@ -102,14 +104,14 @@ class strategy:
             self.agent.move(UP_RIGHT)
             if self.agent.get_cell() == 1:
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP)
             else:
                 self.agent.move(LEFT)
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP)
                 self.agent.move(UP)
@@ -123,20 +125,20 @@ class strategy:
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
             elif self.agent.get_cell() == 0.5:
                 self.agent.move(DOWN)
                 # Arrivée à la clé 
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
             else:
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN_RIGHT)
                 ## Condition à completer                                          
@@ -146,14 +148,14 @@ class strategy:
             self.agent.move(DOWN_RIGHT)
             if self.agent.get_cell() == 1:
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(RIGHT)
             else:
                 self.agent.move(UP)
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
@@ -167,20 +169,20 @@ class strategy:
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
             elif self.agent.get_cell() == 0.5:
                 self.agent.move(DOWN)
                 # Arrivée à la clé 
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
             else:
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(LEFT)                                             
@@ -190,14 +192,14 @@ class strategy:
             self.agent.move(DOWN_LEFT)
             if self.agent.get_cell() == 1:
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP_LEFT)
                 self.agent.move(LEFT)
             else:
                 self.agent.move(UP)
                 # Arrivée à la clé
-                self.object_found()
+                self.object_found(KEY_DISCOVERED)
                 self.agent.move(UP_LEFT)
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
@@ -211,20 +213,20 @@ class strategy:
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
             elif self.agent.get_cell() == 0.6:
                 self.agent.move(RIGHT)
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN)
                 self.agent.move(DOWN) 
             else:
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN)                                                
@@ -234,14 +236,14 @@ class strategy:
             self.agent.move(DOWN_RIGHT)
             if self.agent.get_cell() == 1:
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN)
             else:
                 self.agent.move(LEFT)
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
@@ -255,20 +257,20 @@ class strategy:
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(UP)
                 self.agent.move(UP)
                 self.agent.move(UP)
             elif self.agent.get_cell() == 0.6:
                 self.agent.move(RIGHT)
                 # Arrivée au coffre 
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP)
                 self.agent.move(UP)
             else:
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP)                                           
@@ -278,14 +280,14 @@ class strategy:
             self.agent.move(UP_RIGHT)
             if self.agent.get_cell() == 1:
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP)
             else:
                 self.agent.move(LEFT)
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP)
                 self.agent.move(UP)
@@ -299,20 +301,20 @@ class strategy:
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
             elif self.agent.get_cell() == 0.6:
                 self.agent.move(DOWN)
                 # Arrivée au coffre 
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
             else:
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(DOWN_RIGHT)
                 self.agent.move(RIGHT)                                             
@@ -322,14 +324,14 @@ class strategy:
             self.agent.move(DOWN_RIGHT)
             if self.agent.get_cell() == 1:
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(RIGHT)
             else:
                 self.agent.move(UP)
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(UP_RIGHT)
                 self.agent.move(RIGHT)
                 self.agent.move(RIGHT)
@@ -343,20 +345,20 @@ class strategy:
                 self.agent.move(DOWN)
                 self.agent.move(DOWN)
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
             elif self.agent.get_cell() == 0.6:
                 self.agent.move(DOWN)
                 # Arrivée au coffre 
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
             else:
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(DOWN_LEFT)
                 self.agent.move(LEFT)                                             
@@ -366,14 +368,14 @@ class strategy:
             self.agent.move(DOWN_LEFT)
             if self.agent.get_cell() == 1:
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(UP_LEFT)
                 self.agent.move(UP_LEFT)
                 self.agent.move(LEFT)
             else:
                 self.agent.move(UP)
                 # Arrivée au coffre
-                self.object_found()
+                self.object_found(BOX_DISCOVERED)
                 self.agent.move(UP_LEFT)
                 self.agent.move(LEFT)
                 self.agent.move(LEFT)
